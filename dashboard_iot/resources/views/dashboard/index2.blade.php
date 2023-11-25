@@ -93,7 +93,7 @@
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">X%</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-wind fa-2x text-gray-300"></i>
+                                <i class="fas fa-wind fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">X&deg; C</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-temperature-low fa-2x text-gray-300"></i>
+                                <i class="fas fa-temperature-low fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-wind fa-2x text-gray-300"></i>
+                                <i class="fas fa-wind fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">X&deg; C</div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-temperature-low fa-2x text-gray-300"></i>
+                                <i class="fas fa-temperature-low fa-2x"></i>
                             </div>
                         </div>
                     </div>
