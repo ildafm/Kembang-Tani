@@ -203,7 +203,7 @@
     <script>
         let percent_kelembaban_zone_1_value = 0;
         let percent_kelembaban_zone_2_value = 0;
-        let interval = 10000;
+        let interval = 5000;
     </script>
 
     {{-- get realtime data and gauge chart --}}

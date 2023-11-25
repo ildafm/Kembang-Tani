@@ -293,7 +293,7 @@
     {{-- global variabel --}}
     <script>
         let percent_kelembaban_value = 0;
-        let interval = 10000;
+        let interval = 5000;
     </script>
 
     {{-- get realtime data and gauge chart --}}
