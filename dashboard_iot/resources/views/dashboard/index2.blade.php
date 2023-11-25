@@ -57,7 +57,7 @@
             }
 
             .highcharts-figure .chart-container {
-                width: 300px;
+                width: auto;
                 float: none;
                 margin: 0 auto;
             }
@@ -257,7 +257,7 @@
 
             pane: {
                 center: ['50%', '85%'],
-                size: '140%',
+                size: '100%',
                 startAngle: -90,
                 endAngle: 90,
                 background: {
@@ -279,9 +279,9 @@
             // the value axis
             yAxis: {
                 stops: [
-                    [0.1, '#55BF3B'], // green
-                    [0.5, '#DDDF0D'], // yellow
-                    [0.9, '#DF5353'] // red
+                    [0.4, '#DF5353'], // RED DF5353
+                    [0.6, '#DDDF0D'], // yellow DDDF0D
+                    [0.7, '#55BF3B'] // GREEN 55BF3B
                 ],
                 lineWidth: 0,
                 tickWidth: 0,

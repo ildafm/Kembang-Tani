@@ -17,7 +17,7 @@ use App\Http\Controllers\Firebase\ZoneTwoController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('dashboard');
 });
 
 Route::get('dashboard', [DashboardController::class, 'index']);
