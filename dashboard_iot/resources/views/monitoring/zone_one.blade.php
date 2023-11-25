@@ -1,6 +1,6 @@
 @extends('template.master')
 @section('content')
-    {{-- style gauge --}}
+    {{-- style gauge kelembaban tanah --}}
     <style>
         .highcharts-figure .chart-container {
             width: 300px;
@@ -62,6 +62,52 @@
                 float: none;
                 margin: 0 auto;
             }
+        }
+    </style>
+
+    {{-- gauge suhu --}}
+    <style>
+        .highcharts-figure-suhu-udara,
+        .highcharts-data-table table {
+            min-width: auto;
+            max-width: auto;
+            margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
         }
     </style>
 
@@ -147,9 +193,10 @@
         <!-- Content Row -->
 
         <div class="row">
-            <!-- Gauge Kelembaban Tanah Chart -->
+            <!-- Gauge Chart -->
             <div class="col-xl-4 col-lg-5">
                 <div class="row">
+                    {{-- kelembaban tanah --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
@@ -175,8 +222,6 @@
                                 {{-- gauge Kelembaban --}}
                                 <figure class="highcharts-figure">
                                     <div id="container-kelembaban-tanah" class="chart-container"></div>
-                                    <p class="highcharts-description">
-                                    </p>
                                 </figure>
                                 {{-- <div class="chart-pie pt-4 pb-2"> --}}
                                 {{-- <canvas id="myPieChart"></canvas> --}}
@@ -185,12 +230,12 @@
                         </div>
                     </div>
 
-                    {{-- kelembaban Udara --}}
+                    {{-- Suhu Udara --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Udara Zona 1</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Suhu Udara Zona 1</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -208,13 +253,11 @@
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                {{-- gauge Kelembaban --}}
-                                <p>Belum ada sensor</p>
-                                {{-- <figure class="highcharts-figure">
-                                    <div id="container-kelembaban-udara" class="chart-container"></div>
-                                    <p class="highcharts-description">
-                                    </p>
-                                </figure> --}}
+                                {{-- gauge suhu --}}
+                                {{-- <p>Belum ada sensor</p> --}}
+                                <figure class="highcharts-figure-suhu-udara">
+                                    <div id="container-suhu-udara"></div>
+                                </figure>
                                 {{-- <div class="chart-pie pt-4 pb-2"> --}}
                                 {{-- <canvas id="myPieChart"></canvas> --}}
                                 {{-- </div> --}}
@@ -309,8 +352,8 @@
 
                     // update chart gauge
                     if (chartKelembabanTanah) {
-                        point = chartKelembabanTanah.series[0].points[0];
-                        point.update(percent_kelembaban_value);
+                        point_kelembaban_tanah = chartKelembabanTanah.series[0].points[0];
+                        point_kelembaban_tanah.update(percent_kelembaban_value);
                     }
 
                     card_kelembaban_tanah_value.innerText = `${percent_kelembaban_value}%`;
@@ -414,6 +457,118 @@
             }]
 
         }));
+    </script>
+
+    {{-- script suhu udara --}}
+    <script>
+        Highcharts.chart('container-suhu-udara', {
+
+            chart: {
+                type: 'gauge',
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                height: '80%'
+            },
+
+            title: {
+                text: 'Suhu Udara'
+            },
+
+            pane: {
+                startAngle: -90,
+                endAngle: 89.9,
+                background: null,
+                center: ['50%', '75%'],
+                size: '100%'
+            },
+
+            // the value axis
+            yAxis: {
+                min: 0,
+                max: 60,
+                tickPixelInterval: 72,
+                tickPosition: 'inside',
+                tickColor: Highcharts.defaultOptions.chart.backgroundColor || '#FFFFFF',
+                tickLength: 20,
+                tickWidth: 2,
+                minorTickInterval: null,
+                labels: {
+                    distance: 20,
+                    style: {
+                        fontSize: '14px'
+                    }
+                },
+                lineWidth: 0,
+                plotBands: [{
+                    from: 0,
+                    to: 30,
+                    color: '#55BF3B', // green
+                    thickness: 20
+                }, {
+                    from: 30,
+                    to: 50,
+                    color: '#DDDF0D', // yellow
+                    thickness: 20
+                }, {
+                    from: 50,
+                    to: 60,
+                    color: '#DF5353', // red
+                    thickness: 20
+                }]
+            },
+
+            series: [{
+                name: 'Suhu Udara',
+                data: [20],
+                tooltip: {
+                    valueSuffix: "&deg; C"
+                },
+                dataLabels: {
+                    format: "{y}&deg; C",
+                    borderWidth: 0,
+                    color: (
+                        Highcharts.defaultOptions.title &&
+                        Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color
+                    ) || '#333333',
+                    style: {
+                        fontSize: '16px'
+                    }
+                },
+                dial: {
+                    radius: '80%',
+                    backgroundColor: 'gray',
+                    baseWidth: 12,
+                    baseLength: '0%',
+                    rearLength: '0%'
+                },
+                pivot: {
+                    backgroundColor: 'gray',
+                    radius: 6
+                }
+
+            }]
+
+        });
+
+        // Add some life
+        setInterval(() => {
+            const chart = Highcharts.charts[1];
+            if (chart && !chart.renderer.forExport) {
+                const point = chart.series[0].points[0],
+                    inc = Math.round((Math.random() - 0.5) * 20);
+
+                let newVal = point.y + inc;
+                if (newVal < 0 || newVal > 60) {
+                    newVal = point.y - inc;
+                }
+
+                point.update(newVal);
+            }
+
+        }, 5000);
     </script>
 
     {{-- Script for button --}}
