@@ -34,6 +34,7 @@
     {{-- gauge chart --}}
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/boost.js"></script>
     <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -371,9 +372,6 @@
     <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
 
     <!-- Page level plugins -->
-    <script src="{{ asset('template/vendor/chart.js/Chart.min.js') }}"></script>
-
-    <!-- Page level plugins -->
     <script src="{{ asset('template/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('template/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
@@ -419,7 +417,6 @@
             document.getElementById('currentTime').innerHTML =
                 `${day}, ${date} ${month} ${year} - ${hour}:${minute}:${second}`
             setTimeout(getTime, 1000);
-
         }
     </script>
 

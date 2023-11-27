@@ -27,6 +27,9 @@ class ZoneOneController extends Controller
         $active = "zone_1";
 
         $datas = $this->database->getReference($this->tableNameZone1)->getValue();
+        // $datas2 = '{"name": "John", "age": 30, "address": {"city": "New York", "zip": "10001"}}';
+        // dd($datas);
+        // dd($datas2);
 
         if (!empty($datas)) {
             $lastRecord = end($datas);
@@ -44,18 +47,36 @@ class ZoneOneController extends Controller
         } else {
             // Handle the case when there is no data
             return view("monitoring.zone_one")
-                ->with('active', $active)
-                ->with('title', $title);
+                ->with('datas', '0')
+                ->with('lastRecord', '0')
+                ->with('title', $title)
+                ->with('active', $active);
         }
     }
 
-    public function getRealtimeData()
+    public function getRealtimeDataLastData()
     {
         $datas = $this->database->getReference($this->tableNameZone1)->getValue();
 
         if (!empty($datas)) {
             $lastRecord = end($datas);
             return response()->json($lastRecord);
+        } else {
+            response()->json("failed!!");
+        }
+    }
+
+    public function getRealTimeData()
+    {
+        $datas = $this->database->getReference($this->tableNameZone1)->getValue();
+
+        if (!empty($datas)) {
+
+            usort($datas, function ($a, $b) {
+                return $a['timestamp']['epoch'] - $b['timestamp']['epoch'];
+            });
+
+            return response()->json($datas);
         } else {
             response()->json("failed!!");
         }

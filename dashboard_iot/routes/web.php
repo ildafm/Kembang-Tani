@@ -25,5 +25,6 @@ Route::get('dashboard/getrealtime', [DashboardController::class, 'getRealtimeDat
 
 Route::get('monitoring/zone-one', [ZoneOneController::class, 'index']);
 Route::get('monitoring/zone-two', [ZoneTwoController::class, 'index']);
-Route::get('monitoring/zone-one/getrealtime', [ZoneOneController::class, 'getRealtimeData'])->name('zone1_getrealtime');
+
+Route::get('monitoring/zone-one/getrealtimedata', [ZoneOneController::class, 'getRealTimeData'])->name('zone1_getrealtimedata');
 Route::get('monitoring/zone-two/getrealtime', [ZoneTwoController::class, 'getRealtimeData'])->name('zone2_getrealtime');

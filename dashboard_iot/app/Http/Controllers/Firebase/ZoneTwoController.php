@@ -46,7 +46,9 @@ class ZoneTwoController extends Controller
             // Handle the case when there is no data
             return view("monitoring.zone_two")
                 ->with('active', $active)
-                ->with('title', $title);
+                ->with('title', $title)
+                ->with('datas', '0')
+                ->with('lastRecord', '0');
         }
     }
 

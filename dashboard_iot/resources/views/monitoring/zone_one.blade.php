@@ -65,12 +65,12 @@
         }
     </style>
 
-    {{-- gauge suhu --}}
+    {{-- style boosting chart --}}
     <style>
-        .highcharts-figure-suhu-udara,
+        .highcharts-figure-boosting,
         .highcharts-data-table table {
             min-width: auto;
-            max-width: auto;
+            max-width: 800px;
             margin: 1em auto;
         }
 
@@ -126,7 +126,7 @@
             </button>
         </div>
 
-        <!-- Content Row -->
+        <!-- Content Card Row -->
         <div class="row">
 
             <!-- Kelembaban tanah Card -->
@@ -138,7 +138,7 @@
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Kelembaban Tanah</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kelembaban_tanah_value">
-                                    @if (count($lastRecord) > 0)
+                                    @if ($lastRecord != '0' && count($lastRecord) > 0)
                                         {{ $lastRecord['sensor_value']['percent_value'] }}%
                                     @else
                                         <i>No Data</i>
@@ -192,6 +192,7 @@
         </div>
         <!-- Content Row -->
 
+        {{-- Chart --}}
         <div class="row">
             <!-- Gauge Chart -->
             <div class="col-xl-4 col-lg-5">
@@ -254,10 +255,10 @@
                             <!-- Card Body -->
                             <div class="card-body">
                                 {{-- gauge suhu --}}
-                                {{-- <p>Belum ada sensor</p> --}}
-                                <figure class="highcharts-figure-suhu-udara">
+                                <p>Belum ada sensor</p>
+                                {{-- <figure class="highcharts-figure-suhu-udara">
                                     <div id="container-suhu-udara"></div>
-                                </figure>
+                                </figure> --}}
                                 {{-- <div class="chart-pie pt-4 pb-2"> --}}
                                 {{-- <canvas id="myPieChart"></canvas> --}}
                                 {{-- </div> --}}
@@ -291,40 +292,68 @@
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                        @if (count($datas) > 0)
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Time</th>
-                                            <th>Kelembaban Tanah (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($datas as $key => $item)
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>
-                                                    @php
-                                                        echo date('Y-m-d H:i:s', substr($item['timestamp']['epoch'], 0, 10));
-                                                    @endphp
-                                                </td>
-                                                <td>{{ $item['sensor_value']['percent_value'] }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                        @if ($datas != '0' && count($datas) > 0)
+                            <figure class="highcharts-figure-boosting">
+                                <div id="container-boost-chart"></div>
+                            </figure>
                         @else
                             <i>No Data</i>
                         @endif
-
-                        {{-- <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
-                                    </div> --}}
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {{-- Tabel History --}}
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @if ($datas != '0' && count($datas) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Time</th>
+                                    <th>Kelembaban Tanah (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($datas as $key => $item)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>
+                                            @php
+                                                echo date('Y-m-d H:i:s', substr($item['timestamp']['epoch'], 0, 10));
+                                            @endphp
+                                        </td>
+                                        <td>{{ $item['sensor_value']['percent_value'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <i>No Data</i>
+                @endif
             </div>
         </div>
 
@@ -336,7 +365,8 @@
     {{-- global variabel --}}
     <script>
         let percent_kelembaban_value = 0;
-        let interval = 5000;
+        let interval = 1000;
+        let n_boost = 5;
     </script>
 
     {{-- get realtime data and gauge chart --}}
@@ -344,28 +374,138 @@
         function getRealtimeData() {
             $.ajax({
                 type: 'GET',
-                url: '{{ route('zone1_getrealtime') }}',
+                url: '{{ route('zone1_getrealtimedata') }}',
                 success: function(data) {
-                    // Update tampilan atau lakukan sesuatu dengan data
-                    percent_kelembaban_value = data['sensor_value']['percent_value'];
-                    // console.error(percent_kelembaban_value);
+
+                    const arr_1 = [];
+
+                    let lastdata = data[data.length - 1];
+                    let lastEpoch = lastdata.timestamp.epoch;
+
+                    for (let i = data.length - 1; i >= 0; i--) {
+                        if (data[i].timestamp.epoch >= (lastEpoch - (n_boost * 60))) {
+                            let per_val = data[i].sensor_value.percent_value;
+                            let epoch_time = data[i].timestamp.epoch;
+                            epoch_time = epoch_time * 1000;
+
+                            // push data epoch dan percent value ke dalam variabel array
+                            arr_1.push([epoch_time, per_val]);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    // update boost
+                    if (boostChartKelembabanTanah) {
+                        console.log(arr_1);
+                        boost_data_kelembaban_tanah = boostChartKelembabanTanah.series[0];
+                        // boost_data_kelembaban_tanah.update(arr_1);
+                        boost_data_kelembaban_tanah.setData(arr_1, true, true, false);
+                    }
 
                     // update chart gauge
                     if (chartKelembabanTanah) {
-                        point_kelembaban_tanah = chartKelembabanTanah.series[0].points[0];
-                        point_kelembaban_tanah.update(percent_kelembaban_value);
+                        gauge_point_kelembaban_tanah = chartKelembabanTanah.series[0].points[0];
+                        gauge_point_kelembaban_tanah.update(lastdata.sensor_value.percent_value);
                     }
 
-                    card_kelembaban_tanah_value.innerText = `${percent_kelembaban_value}%`;
+                    card_kelembaban_tanah_value.innerText = `${lastdata.sensor_value.percent_value}%`;
                 },
                 error: function(error) {
                     console.error(error);
                 }
             });
         }
-
         // Set interval untuk melakukan polling setiap 5 detik
         setInterval(getRealtimeData, interval);
+    </script>
+
+    {{-- script for boosting chart --}}
+    <script>
+        function getData(n) {
+            // get data berdasarka n jam yang lalu
+            const lastRecordHour =
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['timestamp']['hour'] : -1 }}
+            const arr = [];
+
+            // konversi array menjadi json
+            var datas = @json($datas);
+            var lastRecord = @json($lastRecord);
+
+            // Pastikan datas masih dalam format JSON
+            // console.log(datas);
+
+            // jika data tidak kosoong maka eksekusi
+            if (lastRecordHour > -1) {
+
+                for (let index = 0; index < datas.length; index++) {
+
+                    if (datas[index].timestamp.epoch >= (lastRecord.timestamp.epoch - (n_boost * 60))) {
+                        let per_val = datas[index].sensor_value.percent_value;
+                        let epoch_time = datas[index].timestamp.epoch;
+                        epoch_time = epoch_time * 1000;
+
+                        // push data epoch dan percent value ke dalam variabel array
+                        arr.push([epoch_time, per_val]);
+                    } else {
+                        break;
+                    }
+                }
+            }
+            // Menampilkan hasil
+            console.log(arr);
+
+            return arr;
+        }
+
+        var data = getData(n_boost);
+
+        // console.time('line');
+        const boostChartKelembabanTanah = Highcharts.chart('container-boost-chart', {
+
+            chart: {
+                zoomType: 'x',
+                boost: {
+                    enabled: true,
+                    // useGPUTranslations: true
+                }
+            },
+
+            title: {
+                text: 'Riwayat kelembaban tanah dalam ' + n_boost + ' menit terakhir'
+            },
+
+            subtitle: {
+                text: 'Zone 1 Live Mode'
+            },
+
+            accessibility: {
+                screenReaderSection: {
+                    beforeChartFormat: `
+                <{headingTagName}>{chartTitle}</{headingTagName}>
+                <div>{chartSubtitle}</div>
+                <div>{chartLongdesc}</div>
+                <div>{xAxisDescription}</div>
+                <div>{yAxisDescription}</div>`
+                }
+            },
+
+            tooltip: {
+                valueDecimals: 2
+            },
+
+            xAxis: {
+                type: 'datetime'
+            },
+
+            series: [{
+                data: data,
+                lineWidth: 0.5,
+                name: 'Kelembaban tanah (%)'
+            }]
+
+        });
+        // console.timeEnd('line');
     </script>
 
     {{-- Script for gauge chart --}}
@@ -444,7 +584,9 @@
 
             series: [{
                 name: 'Kelembaban Tanah',
-                data: [{{ $lastRecord['sensor_value']['percent_value'] }}],
+                data: [
+                    {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['sensor_value']['percent_value'] : 0 }}
+                ],
                 dataLabels: {
                     format: '<div style="text-align:center">' +
                         '<span style="font-size:25px">{y}%</span><br/>' +
@@ -457,118 +599,6 @@
             }]
 
         }));
-    </script>
-
-    {{-- script suhu udara --}}
-    <script>
-        Highcharts.chart('container-suhu-udara', {
-
-            chart: {
-                type: 'gauge',
-                plotBackgroundColor: null,
-                plotBackgroundImage: null,
-                plotBorderWidth: 0,
-                plotShadow: false,
-                height: '80%'
-            },
-
-            title: {
-                text: 'Suhu Udara'
-            },
-
-            pane: {
-                startAngle: -90,
-                endAngle: 89.9,
-                background: null,
-                center: ['50%', '75%'],
-                size: '100%'
-            },
-
-            // the value axis
-            yAxis: {
-                min: 0,
-                max: 60,
-                tickPixelInterval: 72,
-                tickPosition: 'inside',
-                tickColor: Highcharts.defaultOptions.chart.backgroundColor || '#FFFFFF',
-                tickLength: 20,
-                tickWidth: 2,
-                minorTickInterval: null,
-                labels: {
-                    distance: 20,
-                    style: {
-                        fontSize: '14px'
-                    }
-                },
-                lineWidth: 0,
-                plotBands: [{
-                    from: 0,
-                    to: 30,
-                    color: '#55BF3B', // green
-                    thickness: 20
-                }, {
-                    from: 30,
-                    to: 50,
-                    color: '#DDDF0D', // yellow
-                    thickness: 20
-                }, {
-                    from: 50,
-                    to: 60,
-                    color: '#DF5353', // red
-                    thickness: 20
-                }]
-            },
-
-            series: [{
-                name: 'Suhu Udara',
-                data: [20],
-                tooltip: {
-                    valueSuffix: "&deg; C"
-                },
-                dataLabels: {
-                    format: "{y}&deg; C",
-                    borderWidth: 0,
-                    color: (
-                        Highcharts.defaultOptions.title &&
-                        Highcharts.defaultOptions.title.style &&
-                        Highcharts.defaultOptions.title.style.color
-                    ) || '#333333',
-                    style: {
-                        fontSize: '16px'
-                    }
-                },
-                dial: {
-                    radius: '80%',
-                    backgroundColor: 'gray',
-                    baseWidth: 12,
-                    baseLength: '0%',
-                    rearLength: '0%'
-                },
-                pivot: {
-                    backgroundColor: 'gray',
-                    radius: 6
-                }
-
-            }]
-
-        });
-
-        // Add some life
-        setInterval(() => {
-            const chart = Highcharts.charts[1];
-            if (chart && !chart.renderer.forExport) {
-                const point = chart.series[0].points[0],
-                    inc = Math.round((Math.random() - 0.5) * 20);
-
-                let newVal = point.y + inc;
-                if (newVal < 0 || newVal > 60) {
-                    newVal = point.y - inc;
-                }
-
-                point.update(newVal);
-            }
-
-        }, 5000);
     </script>
 
     {{-- Script for button --}}

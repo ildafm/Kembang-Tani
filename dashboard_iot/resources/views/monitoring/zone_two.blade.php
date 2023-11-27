@@ -92,7 +92,7 @@
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Kelembaban Tanah</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kelembaban_tanah_value">
-                                    @if (count($lastRecord) > 0)
+                                    @if ($lastRecord != '0' && count($lastRecord) > 0)
                                         {{ $lastRecord['sensor_value']['percent_value'] }}%
                                     @else
                                         <i>No Data</i>
@@ -248,7 +248,7 @@
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                        @if (count($datas) > 0)
+                        @if ($datas != '0' && count($datas) > 0)
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable">
                                     <thead>
@@ -401,7 +401,9 @@
 
             series: [{
                 name: 'Kelembaban Tanah',
-                data: [{{ $lastRecord['sensor_value']['percent_value'] }}],
+                data: [
+                    {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['sensor_value']['percent_value'] : 0 }}
+                ],
                 dataLabels: {
                     format: '<div style="text-align:center">' +
                         '<span style="font-size:25px">{y}%</span><br/>' +
@@ -423,7 +425,6 @@
                 btn_siram.hidden = true
                 btn_stop_siram.hidden = false
             }
-
         }
 
         function clickButtonStopSiram() {
