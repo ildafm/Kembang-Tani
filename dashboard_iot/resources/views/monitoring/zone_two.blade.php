@@ -1,6 +1,6 @@
 @extends('template.master')
 @section('content')
-    {{-- style gauge --}}
+    {{-- style gauge kelembaban tanah --}}
     <style>
         .highcharts-figure .chart-container {
             width: 300px;
@@ -65,10 +65,56 @@
         }
     </style>
 
+    {{-- style boosting chart --}}
+    <style>
+        .highcharts-figure-boosting,
+        .highcharts-data-table table {
+            min-width: auto;
+            max-width: 800px;
+            margin: 1em auto;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #ebebeb;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td,
+        .highcharts-data-table th,
+        .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr,
+        .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+    </style>
+
     <div class="container-fluid">
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Zone 2</h1>
+            <h1 class="h3 mb-0 text-gray-800">{{ $title }}</h1>
 
             <button class="btn btn-sm btn-primary shadow-sm" id="btn_siram" onclick="clickButtonSiram()">
                 <i class="fas fa-faucet fa-sm text-white-50"></i>
@@ -80,7 +126,7 @@
             </button>
         </div>
 
-        <!-- Content Row -->
+        <!-- Content Card Row -->
         <div class="row">
 
             <!-- Kelembaban tanah Card -->
@@ -107,36 +153,76 @@
                 </div>
             </div>
 
-            <!-- Kelembaban udara Card -->
+            <!-- Kondisi tanah Card -->
             <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12 mb-4">
                 <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Kelembaban Udara</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">X%</div>
+                                    Kondisi tanah</div>
+                                @if ($lastRecord != '0' && count($lastRecord) > 0)
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kondisi_tanah">
+                                        @php
+                                            if ($lastRecord['sensor_value']['percent_value'] >= 80) {
+                                                echo 'Sangat Basah';
+                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 60) {
+                                                echo 'Basah';
+                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 40) {
+                                                echo 'Lembab';
+                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 20) {
+                                                echo 'Kering';
+                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 0) {
+                                                echo 'Sangat Kering';
+                                            } else {
+                                                echo 'Kesalahan dalam mendeteksi';
+                                            }
+                                        @endphp
+                                    </div>
+                                @else
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        <i>No Data</i>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-wind fa-2x"></i>
+                                <i class="fas fa-glass-water fa-2x"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Suhu Udara Card -->
+            <!-- Aksi Card -->
             <div class="col-xl-4 col-md-4 col-sm-4 col-xs-12 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Suhu Udara</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">X&deg; C</div>
+                                    Aksi</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    @if ($lastRecord != '0' && count($lastRecord) > 0)
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_aksi">
+                                            @php
+                                                if ($lastRecord['sensor_value']['percent_value'] > 50) {
+                                                    echo 'Tidak perlu disiram';
+                                                } elseif ($lastRecord['sensor_value']['percent_value'] >= 0) {
+                                                    echo 'Perlu disiram';
+                                                } else {
+                                                    echo 'Kesalahan dalam mendeteksi';
+                                                }
+                                            @endphp
+                                        </div>
+                                    @else
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <i>No Data</i>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             <div class="col-auto">
-                                <i class="fas fa-temperature-low fa-2x"></i>
+                                <i class="fas fa-shower fa-2x"></i>
                             </div>
                         </div>
                     </div>
@@ -146,15 +232,17 @@
         </div>
         <!-- Content Row -->
 
+        {{-- Chart --}}
         <div class="row">
-            <!-- Gauge Kelembaban Tanah Chart -->
+            <!-- Gauge Chart -->
             <div class="col-xl-4 col-lg-5">
                 <div class="row">
+                    {{-- kelembaban tanah --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah Zona 2</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -175,22 +263,17 @@
                                 {{-- gauge Kelembaban --}}
                                 <figure class="highcharts-figure">
                                     <div id="container-kelembaban-tanah" class="chart-container"></div>
-                                    <p class="highcharts-description">
-                                    </p>
                                 </figure>
-                                {{-- <div class="chart-pie pt-4 pb-2"> --}}
-                                {{-- <canvas id="myPieChart"></canvas> --}}
-                                {{-- </div> --}}
                             </div>
                         </div>
                     </div>
 
-                    {{-- kelembaban Udara --}}
+                    {{-- Prediksi cuaca --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Udara Zona 2</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -208,16 +291,19 @@
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                {{-- gauge Kelembaban --}}
-                                <p>Belum ada sensor</p>
-                                {{-- <figure class="highcharts-figure">
-                                    <div id="container-kelembaban-udara" class="chart-container"></div>
-                                    <p class="highcharts-description">
-                                    </p>
-                                </figure> --}}
-                                {{-- <div class="chart-pie pt-4 pb-2"> --}}
-                                {{-- <canvas id="myPieChart"></canvas> --}}
-                                {{-- </div> --}}
+                                {{-- icon cuaca --}}
+                                <center>
+                                    <div class="row">
+                                        <div class="col">
+                                            <img id="prediksi_icon" src="" alt="Icon_cuaca.png"
+                                                style="width: auto; height: auto" class="card-img-top">
+                                        </div>
+                                        <div class="col">
+                                            <p id="prediksi_cuaca">Cuaca</p>
+                                            <p id="prediksi_waktu">Waktu</p>
+                                        </div>
+                                    </div>
+                                </center>
                             </div>
                         </div>
                     </div>
@@ -249,39 +335,67 @@
                     <!-- Card Body -->
                     <div class="card-body">
                         @if ($datas != '0' && count($datas) > 0)
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Time</th>
-                                            <th>Kelembaban Tanah (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($datas as $key => $item)
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>
-                                                    @php
-                                                        echo date('Y-m-d H:i:s', substr($item['timestamp']['epoch'], 0, 10));
-                                                    @endphp
-                                                </td>
-                                                <td>{{ $item['sensor_value']['percent_value'] }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                            <figure class="highcharts-figure-boosting">
+                                <div id="container-boost-chart"></div>
+                            </figure>
                         @else
                             <i>No Data</i>
                         @endif
-
-                        {{-- <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
-                                    </div> --}}
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {{-- Tabel History --}}
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                        aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-header">Dropdown Header:</div>
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                @if ($datas != '0' && count($datas) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Time</th>
+                                    <th>Kelembaban Tanah (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($datas as $key => $item)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>
+                                            @php
+                                                echo date('Y-m-d H:i:s', substr($item['timestamp']['epoch'], 0, 10));
+                                            @endphp
+                                        </td>
+                                        <td>{{ $item['sensor_value']['percent_value'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <i>No Data</i>
+                @endif
             </div>
         </div>
 
@@ -290,39 +404,284 @@
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    {{-- script prediksi cuaca --}}
+    <script>
+        var lat = -2.988831;
+        var lon = 104.756950;
+
+        function getWilayah() {
+            $.getJSON('https://ibnux.github.io/BMKG-importer/cuaca/wilayah.json', function(data) {
+                // var items = [];
+                var jml = data.length;
+
+                //hitung jarak
+                for (n = 0; n < jml; n++) {
+                    data[n].jarak = distance(lat, lon, data[n].lat, data[n].lon, 'K');
+                }
+
+                //urutkan berdasarkan jarak
+                data.sort(urutkanJarak);
+
+                $('#judulCuaca').html(data[0].kota);
+                getCuaca(data[0].id);
+            });
+        }
+
+        function getCuaca(idWilayah) {
+            $.getJSON('https://ibnux.github.io/BMKG-importer/cuaca/' + idWilayah + '.json', function(data) {
+                var items = [];
+                var jml = 6;
+
+                //setelah dapat jarak,  ambil 5 terdekat
+                for (n = 0; n < jml; n++) {
+                    items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
+                        .getTime()
+                    ])
+                    if (n > 3) break
+                };
+                let currentTime = new Date().getTime();
+
+                let lastIndexTime;
+                for (let i = 0; i < items.length; i++) {
+                    lastIndexTime = items[i];
+
+                    if (items[i][3] > currentTime) {
+                        break;
+                    }
+                }
+                let prediksi_kode_cuaca = lastIndexTime[0];
+                let prediksi_cuaca = lastIndexTime[1];
+                let prediksi_waktu_cuaca = lastIndexTime[2];
+                let prediksi_epoch_cuaca = lastIndexTime[3];
+
+                document.getElementById("prediksi_icon").src = "https://ibnux.github.io/BMKG-importer/icon/" +
+                    prediksi_kode_cuaca + ".png";
+                document.getElementById("prediksi_cuaca").innerText = prediksi_cuaca;
+                document.getElementById("prediksi_waktu").innerText = prediksi_waktu_cuaca;
+
+
+            });
+        }
+
+        // https://www.htmlgoodies.com/beyond/javascript/calculate-the-distance-between-two-points-in-your-web-apps.html
+        function distance(lat1, lon1, lat2, lon2) {
+            var radlat1 = Math.PI * lat1 / 180
+            var radlat2 = Math.PI * lat2 / 180
+            var theta = lon1 - lon2
+            var radtheta = Math.PI * theta / 180
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            dist = Math.acos(dist)
+            dist = dist * 180 / Math.PI
+            dist = dist * 60 * 1.1515
+            return Math.round((dist * 1.609344) * 1000) / 1000;
+        }
+
+        function urutkanJarak(a, b) {
+            if (a['jarak'] === b['jarak']) {
+                return 0;
+            } else {
+                return (a['jarak'] < b['jarak']) ? -1 : 1;
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, onErrorGPS);
+            } else {
+                //ga bisa dapat GPS, pake default aja
+                getWilayah();
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            getWilayah();
+        }
+
+        function onErrorGPS(error) {
+            //pake default aja
+            getWilayah();
+        }
+
+        getLocation();
+    </script>
+
     {{-- global variabel --}}
     <script>
         let percent_kelembaban_value = 0;
         let interval = 5000;
+        let n_boost = 5;
     </script>
 
-    {{-- get realtime data --}}
+    {{-- get realtime data and gauge chart --}}
     <script>
         function getRealtimeData() {
             $.ajax({
                 type: 'GET',
-                url: '{{ route('zone2_getrealtime') }}',
+                url: '{{ route('zone2_getrealtimedata') }}',
                 success: function(data) {
-                    // Update tampilan atau lakukan sesuatu dengan data
-                    percent_kelembaban_value = data['sensor_value']['percent_value'];
-                    // console.error(percent_kelembaban_value);
+
+                    const arr_1 = [];
+
+                    let lastdata = data[data.length - 1];
+                    let lastEpoch = lastdata.timestamp.epoch;
+                    let kondisi_tanah;
+                    let aksi;
+
+                    // kondisi untuk chart boost
+                    for (let i = data.length - 1; i >= 0; i--) {
+                        if (data[i].timestamp.epoch >= (lastEpoch - (n_boost * 60))) {
+                            let per_val = data[i].sensor_value.percent_value;
+                            let epoch_time = data[i].timestamp.epoch;
+                            epoch_time = epoch_time * 1000;
+
+                            // push data epoch dan percent value ke dalam variabel array
+                            arr_1.push([epoch_time, per_val]);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    // update boost
+                    if (boostChartKelembabanTanah) {
+                        boost_data_kelembaban_tanah = boostChartKelembabanTanah.series[0];
+                        // boost_data_kelembaban_tanah.update(arr_1);
+                        boost_data_kelembaban_tanah.setData(arr_1, true, true, false);
+                    }
 
                     // update chart gauge
                     if (chartKelembabanTanah) {
-                        point = chartKelembabanTanah.series[0].points[0];
-                        point.update(percent_kelembaban_value);
+                        gauge_point_kelembaban_tanah = chartKelembabanTanah.series[0].points[0];
+                        gauge_point_kelembaban_tanah.update(lastdata.sensor_value.percent_value);
                     }
 
-                    card_kelembaban_tanah_value.innerText = `${percent_kelembaban_value}%`;
+                    // Kondisi untuk kondisi tanah
+                    if (lastdata.sensor_value.percent_value >= 80) {
+                        kondisi_tanah = "Sangat Basah";
+                    } else if (lastdata.sensor_value.percent_value >= 60) {
+                        kondisi_tanah = "Basah";
+                    } else if (lastdata.sensor_value.percent_value >= 40) {
+                        kondisi_tanah = "Lembab";
+                    } else if (lastdata.sensor_value.percent_value >= 20) {
+                        kondisi_tanah = "Kering";
+                    } else if (lastdata.sensor_value.percent_value >= 0) {
+                        kondisi_tanah = "Sangat Kering";
+                    } else {
+                        kondisi_tanah = "Kesalahan dalam mendeteksi";
+                    }
+
+                    // kondisi untuk aksi
+                    if (lastdata.sensor_value.percent_value > 50) {
+                        aksi = "Tidak perlu disiram";
+                    } else if (lastdata.sensor_value.percent_value >= 0) {
+                        aksi = "Perlu disiram";
+                    } else {
+                        aksi = "Kesalahan dalam mendeteksi";
+                    }
+
+                    document.getElementById("card_kelembaban_tanah_value").innerText =
+                        `${lastdata.sensor_value.percent_value}%`;
+
+                    document.getElementById("card_kondisi_tanah").innerText = `${kondisi_tanah}`;
+
+                    document.getElementById("card_aksi").innerText = `${aksi}`;
                 },
                 error: function(error) {
                     console.error(error);
                 }
             });
         }
-
         // Set interval untuk melakukan polling setiap 5 detik
         setInterval(getRealtimeData, interval);
+    </script>
+
+    {{-- script for boosting chart --}}
+    <script>
+        function getData(n) {
+            // get data berdasarka n jam yang lalu
+            const lastRecordHour =
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['timestamp']['hour'] : -1 }}
+            const arr = [];
+
+            // konversi array menjadi json
+            var datas = @json($datas);
+            var lastRecord = @json($lastRecord);
+
+            // Pastikan datas masih dalam format JSON
+            // console.log(datas);
+
+            // jika data tidak kosoong maka eksekusi
+            if (lastRecordHour > -1) {
+
+                for (let index = 0; index < datas.length; index++) {
+
+                    if (datas[index].timestamp.epoch >= (lastRecord.timestamp.epoch - (n_boost * 60))) {
+                        let per_val = datas[index].sensor_value.percent_value;
+                        let epoch_time = datas[index].timestamp.epoch;
+                        epoch_time = epoch_time * 1000;
+
+                        // push data epoch dan percent value ke dalam variabel array
+                        arr.push([epoch_time, per_val]);
+                    } else {
+                        break;
+                    }
+                }
+            }
+            // Menampilkan hasil
+            // console.log(arr);
+
+            return arr;
+        }
+
+        var data = getData(n_boost);
+
+        // console.time('line');
+        const boostChartKelembabanTanah = Highcharts.chart('container-boost-chart', {
+
+            chart: {
+                zoomType: 'x',
+                boost: {
+                    enabled: true,
+                    // useGPUTranslations: true
+                }
+            },
+
+            title: {
+                text: 'Riwayat kelembaban tanah dalam ' + n_boost + ' menit terakhir'
+            },
+
+            subtitle: {
+                text: 'Live Mode'
+            },
+
+            accessibility: {
+                screenReaderSection: {
+                    beforeChartFormat: `
+                <{headingTagName}>{chartTitle}</{headingTagName}>
+                <div>{chartSubtitle}</div>
+                <div>{chartLongdesc}</div>
+                <div>{xAxisDescription}</div>
+                <div>{yAxisDescription}</div>`
+                }
+            },
+
+            tooltip: {
+                valueDecimals: 2
+            },
+
+            xAxis: {
+                type: 'datetime'
+            },
+
+            series: [{
+                data: data,
+                lineWidth: 0.5,
+                name: 'Kelembaban tanah (%)'
+            }]
+
+        });
+        // console.timeEnd('line');
     </script>
 
     {{-- Script for gauge chart --}}
@@ -425,6 +784,7 @@
                 btn_siram.hidden = true
                 btn_stop_siram.hidden = false
             }
+
         }
 
         function clickButtonStopSiram() {

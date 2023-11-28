@@ -52,13 +52,29 @@ class ZoneTwoController extends Controller
         }
     }
 
-    public function getRealtimeData()
+    public function getRealtimeDataLastData()
     {
         $datas = $this->database->getReference($this->tableNameZone2)->getValue();
 
         if (!empty($datas)) {
             $lastRecord = end($datas);
             return response()->json($lastRecord);
+        } else {
+            response()->json("failed!!");
+        }
+    }
+
+    public function getRealTimeData()
+    {
+        $datas = $this->database->getReference($this->tableNameZone2)->getValue();
+
+        if (!empty($datas)) {
+
+            usort($datas, function ($a, $b) {
+                return $a['timestamp']['epoch'] - $b['timestamp']['epoch'];
+            });
+
+            return response()->json($datas);
         } else {
             response()->json("failed!!");
         }
