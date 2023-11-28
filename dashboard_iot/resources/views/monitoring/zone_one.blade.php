@@ -314,7 +314,7 @@
                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header">Atur waktunya</div>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                <a class="dropdown-item active" href="#" data-toggle="tab"
                                     onclick="changeTab('boost_live_mode')">Live Mode</a>
 
                                 <a class="dropdown-item" href="#" data-toggle="tab"
