@@ -139,7 +139,7 @@
                                     Kelembaban Tanah</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kelembaban_tanah_value">
                                     @if ($lastRecord != '0' && count($lastRecord) > 0)
-                                        {{ $lastRecord['sensor_value']['percent_value'] }}%
+                                        {{ $lastRecord['percent_value'] }}%
                                     @else
                                         <i>No Data</i>
                                     @endif
@@ -164,15 +164,15 @@
                                 @if ($lastRecord != '0' && count($lastRecord) > 0)
                                     <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kondisi_tanah">
                                         @php
-                                            if ($lastRecord['sensor_value']['percent_value'] >= 80) {
+                                            if ($lastRecord['percent_value'] >= 80) {
                                                 echo 'Sangat Basah';
-                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 60) {
+                                            } elseif ($lastRecord['percent_value'] >= 60) {
                                                 echo 'Basah';
-                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 40) {
+                                            } elseif ($lastRecord['percent_value'] >= 40) {
                                                 echo 'Lembab';
-                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 20) {
+                                            } elseif ($lastRecord['percent_value'] >= 20) {
                                                 echo 'Kering';
-                                            } elseif ($lastRecord['sensor_value']['percent_value'] >= 0) {
+                                            } elseif ($lastRecord['percent_value'] >= 0) {
                                                 echo 'Sangat Kering';
                                             } else {
                                                 echo 'Kesalahan dalam mendeteksi';
@@ -205,9 +205,9 @@
                                     @if ($lastRecord != '0' && count($lastRecord) > 0)
                                         <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_aksi">
                                             @php
-                                                if ($lastRecord['sensor_value']['percent_value'] > 50) {
+                                                if ($lastRecord['percent_value'] > 50) {
                                                     echo 'Tidak perlu disiram';
-                                                } elseif ($lastRecord['sensor_value']['percent_value'] >= 0) {
+                                                } elseif ($lastRecord['percent_value'] >= 0) {
                                                     echo 'Perlu disiram';
                                                 } else {
                                                     echo 'Kesalahan dalam mendeteksi';
@@ -384,10 +384,12 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>
                                             @php
-                                                echo date('Y-m-d H:i:s', substr($item['timestamp']['epoch'], 0, 10));
+                                                // $e = $item['epoch'] + 5 * 60 * 60;
+                                                // echo $e;
+                                                echo date('Y-m-d H:i:s', substr($item['epoch'], 0, 10));
                                             @endphp
                                         </td>
-                                        <td>{{ $item['sensor_value']['percent_value'] }}</td>
+                                        <td>{{ $item['percent_value'] }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -525,15 +527,15 @@
                     const arr_1 = [];
 
                     let lastdata = data[data.length - 1];
-                    let lastEpoch = lastdata.timestamp.epoch;
+                    let lastEpoch = lastdata.epoch;
                     let kondisi_tanah;
                     let aksi;
 
                     // kondisi untuk chart boost
                     for (let i = data.length - 1; i >= 0; i--) {
-                        if (data[i].timestamp.epoch >= (lastEpoch - (n_boost * 60))) {
-                            let per_val = data[i].sensor_value.percent_value;
-                            let epoch_time = data[i].timestamp.epoch;
+                        if (data[i].epoch >= (lastEpoch - (n_boost * 60))) {
+                            let per_val = data[i].percent_value;
+                            let epoch_time = data[i].epoch;
                             epoch_time = epoch_time * 1000;
 
                             // push data epoch dan percent value ke dalam variabel array
@@ -553,35 +555,35 @@
                     // update chart gauge
                     if (chartKelembabanTanah) {
                         gauge_point_kelembaban_tanah = chartKelembabanTanah.series[0].points[0];
-                        gauge_point_kelembaban_tanah.update(lastdata.sensor_value.percent_value);
+                        gauge_point_kelembaban_tanah.update(lastdata.percent_value);
                     }
 
                     // Kondisi untuk kondisi tanah
-                    if (lastdata.sensor_value.percent_value >= 80) {
+                    if (lastdata.percent_value >= 80) {
                         kondisi_tanah = "Sangat Basah";
-                    } else if (lastdata.sensor_value.percent_value >= 60) {
+                    } else if (lastdata.percent_value >= 60) {
                         kondisi_tanah = "Basah";
-                    } else if (lastdata.sensor_value.percent_value >= 40) {
+                    } else if (lastdata.percent_value >= 40) {
                         kondisi_tanah = "Lembab";
-                    } else if (lastdata.sensor_value.percent_value >= 20) {
+                    } else if (lastdata.percent_value >= 20) {
                         kondisi_tanah = "Kering";
-                    } else if (lastdata.sensor_value.percent_value >= 0) {
+                    } else if (lastdata.percent_value >= 0) {
                         kondisi_tanah = "Sangat Kering";
                     } else {
                         kondisi_tanah = "Kesalahan dalam mendeteksi";
                     }
 
                     // kondisi untuk aksi
-                    if (lastdata.sensor_value.percent_value > 50) {
+                    if (lastdata.percent_value > 50) {
                         aksi = "Tidak perlu disiram";
-                    } else if (lastdata.sensor_value.percent_value >= 0) {
+                    } else if (lastdata.percent_value >= 0) {
                         aksi = "Perlu disiram";
                     } else {
                         aksi = "Kesalahan dalam mendeteksi";
                     }
 
                     document.getElementById("card_kelembaban_tanah_value").innerText =
-                        `${lastdata.sensor_value.percent_value}%`;
+                        `${lastdata.percent_value}%`;
 
                     document.getElementById("card_kondisi_tanah").innerText = `${kondisi_tanah}`;
 
@@ -601,7 +603,7 @@
         function getData(n) {
             // get data berdasarka n jam yang lalu
             const lastRecordHour =
-                {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['timestamp']['hour'] : -1 }}
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] / 1000) * (60 * 60) : -1 }}
             const arr = [];
 
             // konversi array menjadi json
@@ -616,9 +618,9 @@
 
                 for (let index = 0; index < datas.length; index++) {
 
-                    if (datas[index].timestamp.epoch >= (lastRecord.timestamp.epoch - (n_boost * 60))) {
-                        let per_val = datas[index].sensor_value.percent_value;
-                        let epoch_time = datas[index].timestamp.epoch;
+                    if (datas[index].epoch >= (lastRecord.epoch - (n_boost * 60))) {
+                        let per_val = datas[index].percent_value;
+                        let epoch_time = datas[index].epoch;
                         epoch_time = epoch_time * 1000;
 
                         // push data epoch dan percent value ke dalam variabel array
@@ -761,7 +763,7 @@
             series: [{
                 name: 'Kelembaban Tanah',
                 data: [
-                    {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['sensor_value']['percent_value'] : 0 }}
+                    {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['percent_value'] : 0 }}
                 ],
                 dataLabels: {
                     format: '<div style="text-align:center">' +

@@ -34,8 +34,8 @@ class DashboardController extends Controller
         $lastRecordZone1 = end($datas_zone_1);
         $lastRecordZone2 = end($datas_zone_2);
 
-        $percent_value_zone_1 = $lastRecordZone1['sensor_value']['percent_value'];
-        $percent_value_zone_2 = $lastRecordZone2['sensor_value']['percent_value'];
+        $percent_value_zone_1 = $lastRecordZone1['percent_value'];
+        $percent_value_zone_2 = $lastRecordZone2['percent_value'];
 
         return view("dashboard.index2")
             // ->with('datas', $datas)

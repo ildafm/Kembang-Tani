@@ -35,7 +35,7 @@ class ZoneOneController extends Controller
             $lastRecord = end($datas);
 
             usort($datas, function ($a, $b) {
-                return $b['timestamp']['epoch'] - $a['timestamp']['epoch'];
+                return $b['epoch'] - $a['epoch'];
             });
 
             // $lastRecord now contains the last record from the associative array
@@ -73,7 +73,7 @@ class ZoneOneController extends Controller
         if (!empty($datas)) {
 
             usort($datas, function ($a, $b) {
-                return $a['timestamp']['epoch'] - $b['timestamp']['epoch'];
+                return $a['epoch'] - $b['epoch'];
             });
 
             return response()->json($datas);
