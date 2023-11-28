@@ -1,5 +1,6 @@
 @extends('template.master')
 @section('content')
+    {{-- sytle for gauge chart --}}
     <style>
         .highcharts-figure .chart-container {
             width: 300px;
@@ -79,131 +80,166 @@
             </button>
         </div>
 
-        <!-- Content Row -->
         <div class="row">
-
-            <!-- Kelembaban Udara (Zona 1) Card -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
+            {{-- gauge card --}}
+            <div class="col-lg-8">
+                {{-- gauge kelembaban tanah --}}
+                <div class="card shadow mb-4">
+                    <!-- Card Header -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
+                    </div>
+                    <!-- Card Body -->
                     <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Kelembaban Udara (Zona 1)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">X%</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-wind fa-2x"></i>
-                            </div>
-                        </div>
+                        <figure class="highcharts-figure">
+                            <div id="container-zone_1" class="chart-container"></div>
+                            <div id="container-zone_2" class="chart-container"></div>
+                        </figure>
                     </div>
                 </div>
             </div>
 
-            <!-- Suhu (Zona 1) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Suhu (Zona 1)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">X&deg; C</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-temperature-low fa-2x"></i>
-                            </div>
-                        </div>
+            {{-- card prediksi cuaca --}}
+            <div class="col-lg-4">
+                <div class="card shadow mb-4">
+                    <!-- Card Header -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca</h6>
                     </div>
-                </div>
-            </div>
-
-            <!-- Kelembaban Udara (Zona 2) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Kelembaban Udara (Zona 2)
+                    <!-- Card Body -->
+                    <div class="card-body"> {{-- style="height: 240px" --}}
+                        {{-- icon cuaca --}}
+                        <center>
+                            <div class="row">
+                                <div class="col">
+                                    <img id="prediksi_icon" src="" alt="Icon_cuaca.png"
+                                        style="width: auto; height: auto" class="card-img-top">
                                 </div>
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col-auto">
-                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">X%</div>
-                                    </div>
-                                    {{-- <div class="col">
-                                        <div class="progress progress-sm mr-2">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%"
-                                                aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div> --}}
+                                <div class="col">
+                                    <p id="prediksi_cuaca">Cuaca</p>
+                                    <p id="prediksi_waktu">Waktu</p>
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-wind fa-2x"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Suhu (Zona 2) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Suhu (Zona 2)</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">X&deg; C</div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-temperature-low fa-2x"></i>
-                            </div>
-                        </div>
+                        </center>
                     </div>
                 </div>
             </div>
         </div>
-
-        {{-- gauge kelembaban tanah --}}
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <figure class="highcharts-figure">
-                    <div id="container-zone_1" class="chart-container"></div>
-                    <div id="container-zone_2" class="chart-container"></div>
-
-                </figure>
-                {{-- <canvas id="myAreaChart"></canvas> --}}
-            </div>
-        </div>
-
     </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     {{-- global variabel --}}
     <script>
         let percent_kelembaban_zone_1_value = 0;
         let percent_kelembaban_zone_2_value = 0;
         let interval = 5000;
+    </script>
+
+    {{-- script prediksi cuaca --}}
+    <script>
+        var lat = -2.988831;
+        var lon = 104.756950;
+
+        function getWilayah() {
+            $.getJSON('https://ibnux.github.io/BMKG-importer/cuaca/wilayah.json', function(data) {
+                // var items = [];
+                var jml = data.length;
+
+                //hitung jarak
+                for (n = 0; n < jml; n++) {
+                    data[n].jarak = distance(lat, lon, data[n].lat, data[n].lon, 'K');
+                }
+
+                //urutkan berdasarkan jarak
+                data.sort(urutkanJarak);
+
+                $('#judulCuaca').html(data[0].kota);
+                getCuaca(data[0].id);
+            });
+        }
+
+        function getCuaca(idWilayah) {
+            $.getJSON('https://ibnux.github.io/BMKG-importer/cuaca/' + idWilayah + '.json', function(data) {
+                var items = [];
+                var jml = 6;
+
+                //setelah dapat jarak,  ambil 5 terdekat
+                for (n = 0; n < jml; n++) {
+                    items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
+                        .getTime()
+                    ])
+                    if (n > 4) break
+                };
+                let currentTime = new Date().getTime();
+
+                let lastIndexTime;
+
+                for (let i = 0; i < items.length; i++) {
+                    lastIndexTime = items[i];
+
+                    if (items[i][3] > currentTime) {
+                        break;
+                    }
+                }
+
+                let prediksi_kode_cuaca = lastIndexTime[0];
+                let prediksi_cuaca = lastIndexTime[1];
+                let prediksi_waktu_cuaca = lastIndexTime[2];
+                let prediksi_epoch_cuaca = lastIndexTime[3];
+
+                document.getElementById("prediksi_icon").src = "https://ibnux.github.io/BMKG-importer/icon/" +
+                    prediksi_kode_cuaca + ".png";
+                document.getElementById("prediksi_cuaca").innerText = prediksi_cuaca;
+                document.getElementById("prediksi_waktu").innerText = prediksi_waktu_cuaca;
+
+
+            });
+        }
+
+        // https://www.htmlgoodies.com/beyond/javascript/calculate-the-distance-between-two-points-in-your-web-apps.html
+        function distance(lat1, lon1, lat2, lon2) {
+            var radlat1 = Math.PI * lat1 / 180
+            var radlat2 = Math.PI * lat2 / 180
+            var theta = lon1 - lon2
+            var radtheta = Math.PI * theta / 180
+            var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+            dist = Math.acos(dist)
+            dist = dist * 180 / Math.PI
+            dist = dist * 60 * 1.1515
+            return Math.round((dist * 1.609344) * 1000) / 1000;
+        }
+
+        function urutkanJarak(a, b) {
+            if (a['jarak'] === b['jarak']) {
+                return 0;
+            } else {
+                return (a['jarak'] < b['jarak']) ? -1 : 1;
+            }
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, onErrorGPS);
+            } else {
+                //ga bisa dapat GPS, pake default aja
+                getWilayah();
+            }
+        }
+
+        function showPosition(position) {
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+            getWilayah();
+        }
+
+        function onErrorGPS(error) {
+            //pake default aja
+            getWilayah();
+        }
+
+        getLocation();
     </script>
 
     {{-- get realtime data and gauge chart --}}
@@ -245,7 +281,6 @@
         setInterval(getRealtimeData, interval);
     </script>
 
-
     {{-- script gauge bar --}}
     <script>
         const gaugeOptions = {
@@ -279,9 +314,9 @@
             // the value axis
             yAxis: {
                 stops: [
-                    [0.4, '#DF5353'], // RED DF5353
-                    [0.6, '#DDDF0D'], // yellow DDDF0D
-                    [0.7, '#55BF3B'] // GREEN 55BF3B
+                    [0.15, '#DF5353'], // RED DF5353
+                    [0.20, '#DDDF0D'], // yellow DDDF0D
+                    [0.45, '#55BF3B'] // GREEN 55BF3B
                 ],
                 lineWidth: 0,
                 tickWidth: 0,

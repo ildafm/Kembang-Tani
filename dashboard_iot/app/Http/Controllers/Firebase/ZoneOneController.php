@@ -30,7 +30,6 @@ class ZoneOneController extends Controller
         // $datas2 = '{"name": "John", "age": 30, "address": {"city": "New York", "zip": "10001"}}';
         // dd($datas);
         // dd($datas2);
-
         if (!empty($datas)) {
             $lastRecord = end($datas);
 

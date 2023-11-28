@@ -1,5 +1,6 @@
 @extends('template.master')
 @section('content')
+
     {{-- style gauge kelembaban tanah --}}
     <style>
         .highcharts-figure .chart-container {
@@ -137,12 +138,26 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Kelembaban Tanah</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kelembaban_tanah_value">
-                                    @if ($lastRecord != '0' && count($lastRecord) > 0)
-                                        {{ $lastRecord['percent_value'] }}%
-                                    @else
-                                        <i>No Data</i>
-                                    @endif
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"
+                                            id="card_kelembaban_tanah_value">
+                                            @if ($lastRecord != '0' && count($lastRecord) > 0)
+                                                {{ $lastRecord['percent_value'] }}%
+                                            @else
+                                                <i>No Data</i>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    {{-- progress --}}
+                                    <div class="col">
+                                        <div class="progress progress-sm mr-2">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                style="width: {{ $lastRecord['percent_value'] }}%"
+                                                id="progress_bar_card_kelembaban" aria-valuenow="50" aria-valuemin="0"
+                                                aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -164,16 +179,16 @@
                                 @if ($lastRecord != '0' && count($lastRecord) > 0)
                                     <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kondisi_tanah">
                                         @php
-                                            if ($lastRecord['percent_value'] >= 80) {
-                                                echo 'Sangat Basah';
-                                            } elseif ($lastRecord['percent_value'] >= 60) {
-                                                echo 'Basah';
-                                            } elseif ($lastRecord['percent_value'] >= 40) {
-                                                echo 'Lembab';
-                                            } elseif ($lastRecord['percent_value'] >= 20) {
-                                                echo 'Kering';
-                                            } elseif ($lastRecord['percent_value'] >= 0) {
+                                            if ($lastRecord['percent_value'] <= 8) {
                                                 echo 'Sangat Kering';
+                                            } elseif ($lastRecord['percent_value'] <= 17) {
+                                                echo 'Kering';
+                                            } elseif ($lastRecord['percent_value'] <= 23) {
+                                                echo 'Lembab';
+                                            } elseif ($lastRecord['percent_value'] <= 28) {
+                                                echo 'Basah';
+                                            } elseif ($lastRecord['percent_value'] > 28) {
+                                                echo 'Sangat Basah';
                                             } else {
                                                 echo 'Kesalahan dalam mendeteksi';
                                             }
@@ -205,7 +220,7 @@
                                     @if ($lastRecord != '0' && count($lastRecord) > 0)
                                         <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_aksi">
                                             @php
-                                                if ($lastRecord['percent_value'] > 50) {
+                                                if ($lastRecord['percent_value'] > 23) {
                                                     echo 'Tidak perlu disiram';
                                                 } elseif ($lastRecord['percent_value'] >= 0) {
                                                     echo 'Perlu disiram';
@@ -240,23 +255,9 @@
                     {{-- kelembaban tanah --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
+                            <!-- Card Header -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah Zona 1</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -271,23 +272,9 @@
                     {{-- Prediksi cuaca --}}
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
+                            <!-- Card Header -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                        aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -311,12 +298,13 @@
 
             </div>
 
-            {{-- Timeline kelembaban tanah --}}
+            {{-- History kelembaban tanah --}}
             <div class="col-xl-8 col-lg-7">
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
+                        {{-- dropdown --}}
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -324,20 +312,69 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header">Dropdown Header:</div>
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-header">Atur waktunya</div>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_live_mode')">Live Mode</a>
+
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_1_jam')"> 1 jam</a>
+
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_4_jam')"> 4 jam</a>
+
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_8_jam')">8 jam</a>
+
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_16_jam')"> 16 jam</a>
+
+                                <a class="dropdown-item" href="#" data-toggle="tab"
+                                    onclick="changeTab('boost_24_jam')"> 24 jam</a>
                             </div>
                         </div>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
                         @if ($datas != '0' && count($datas) > 0)
-                            <figure class="highcharts-figure-boosting">
-                                <div id="container-boost-chart"></div>
-                            </figure>
+                            <div class="tab-content">
+                                {{-- boost live mode --}}
+                                <div class="tab-pane active" id="boost_live_mode">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart"></div>
+                                    </figure>
+                                </div>
+                                {{-- boost 1 jam --}}
+                                <div class="tab-pane" id="boost_1_jam">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart-non_live-1"></div>
+                                    </figure>
+                                </div>
+                                {{-- boost 4 jam --}}
+                                <div class="tab-pane" id="boost_4_jam">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart-non_live-4"></div>
+                                    </figure>
+                                </div>
+                                {{-- boost 8 jam --}}
+                                <div class="tab-pane" id="boost_8_jam">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart-non_live-8"></div>
+                                    </figure>
+                                </div>
+                                {{-- boost 16 jam --}}
+                                <div class="tab-pane" id="boost_16_jam">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart-non_live-16"></div>
+                                    </figure>
+                                </div>
+                                {{-- boost 24 jam --}}
+                                <div class="tab-pane" id="boost_24_jam">
+                                    <figure class="highcharts-figure-boosting">
+                                        <div id="container-boost-chart-non_live-24"></div>
+                                    </figure>
+                                </div>
+                            </div>
                         @else
                             <i>No Data</i>
                         @endif
@@ -348,23 +385,10 @@
 
         {{-- Tabel History --}}
         <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
+            <!-- Card Header -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Dropdown Header:</div>
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </div>
+                <h6 class="m-0 font-weight-bold text-primary">Tabel history kelembaban tanah</h6>
+
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -405,6 +429,230 @@
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    {{-- change tab pane script --}}
+    <script>
+        function changeTab(tabId) {
+            // Aktifkan tab yang sesuai dengan tabId
+            $('.tab-pane').removeClass('active show');
+            $('.dropdown-item').removeClass('active');
+            $('#' + tabId).addClass('active show');
+
+            if (tabId == "boost_1_jam") {
+                let n_boost_non_live = 1 * 60;
+                var data_non_live = getData(n_boost_non_live);
+
+                Highcharts.chart('container-boost-chart-non_live-1', {
+                    chart: {
+                        zoomType: 'x',
+                        boost: {
+                            enabled: true,
+                            // useGPUTranslations: true
+                        }
+                    },
+
+                    title: {
+                        text: 'Riwayat kelembaban tanah dalam 1 jam terakhir'
+                    },
+
+                    subtitle: {
+                        text: 'Non-live mode'
+                    },
+
+                    accessibility: {
+                        screenReaderSection: {
+                            beforeChartFormat: '<{headingTagName}>{chartTitle}</{headingTagName}><div>{chartSubtitle}</div><div>{chartLongdesc}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div>'
+                        }
+                    },
+
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+
+                    xAxis: {
+                        type: 'datetime'
+                    },
+
+                    series: [{
+                        data: data_non_live,
+                        lineWidth: 0.5,
+                        name: 'Kelembaban tanah (%)'
+                    }]
+
+                });
+            } else if (tabId == "boost_4_jam") {
+                let n_boost_non_live = 4 * 60;
+                var data_non_live = getData(n_boost_non_live);
+
+                Highcharts.chart('container-boost-chart-non_live-4', {
+                    chart: {
+                        zoomType: 'x',
+                        boost: {
+                            enabled: true,
+                            // useGPUTranslations: true
+                        }
+                    },
+
+                    title: {
+                        text: 'Riwayat kelembaban tanah dalam 4 jam terakhir'
+                    },
+
+                    subtitle: {
+                        text: 'Non-live mode'
+                    },
+
+                    accessibility: {
+                        screenReaderSection: {
+                            beforeChartFormat: '<{headingTagName}>{chartTitle}</{headingTagName}><div>{chartSubtitle}</div><div>{chartLongdesc}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div>'
+                        }
+                    },
+
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+
+                    xAxis: {
+                        type: 'datetime'
+                    },
+
+                    series: [{
+                        data: data_non_live,
+                        lineWidth: 0.5,
+                        name: 'Kelembaban tanah (%)'
+                    }]
+
+                });
+            } else if (tabId == "boost_8_jam") {
+                let n_boost_non_live = 8 * 60;
+                var data_non_live = getData(n_boost_non_live);
+
+                Highcharts.chart('container-boost-chart-non_live-8', {
+                    chart: {
+                        zoomType: 'x',
+                        boost: {
+                            enabled: true,
+                            // useGPUTranslations: true
+                        }
+                    },
+
+                    title: {
+                        text: 'Riwayat kelembaban tanah dalam 8 jam terakhir'
+                    },
+
+                    subtitle: {
+                        text: 'Non-live mode'
+                    },
+
+                    accessibility: {
+                        screenReaderSection: {
+                            beforeChartFormat: '<{headingTagName}>{chartTitle}</{headingTagName}><div>{chartSubtitle}</div><div>{chartLongdesc}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div>'
+                        }
+                    },
+
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+
+                    xAxis: {
+                        type: 'datetime'
+                    },
+
+                    series: [{
+                        data: data_non_live,
+                        lineWidth: 0.5,
+                        name: 'Kelembaban tanah (%)'
+                    }]
+
+                });
+            } else if (tabId == "boost_16_jam") {
+                let n_boost_non_live = 16 * 60;
+                var data_non_live = getData(n_boost_non_live);
+
+                Highcharts.chart('container-boost-chart-non_live-16', {
+                    chart: {
+                        zoomType: 'x',
+                        boost: {
+                            enabled: true,
+                            // useGPUTranslations: true
+                        }
+                    },
+
+                    title: {
+                        text: 'Riwayat kelembaban tanah dalam 16 jam terakhir'
+                    },
+
+                    subtitle: {
+                        text: 'Non-live mode'
+                    },
+
+                    accessibility: {
+                        screenReaderSection: {
+                            beforeChartFormat: '<{headingTagName}>{chartTitle}</{headingTagName}><div>{chartSubtitle}</div><div>{chartLongdesc}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div>'
+                        }
+                    },
+
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+
+                    xAxis: {
+                        type: 'datetime'
+                    },
+
+                    series: [{
+                        data: data_non_live,
+                        lineWidth: 0.5,
+                        name: 'Kelembaban tanah (%)'
+                    }]
+
+                });
+            } else if (tabId == "boost_24_jam") {
+                let n_boost_non_live = 24 * 60;
+                var data_non_live = getData(n_boost_non_live);
+
+                Highcharts.chart('container-boost-chart-non_live-24', {
+                    chart: {
+                        zoomType: 'x',
+                        boost: {
+                            enabled: true,
+                            // useGPUTranslations: true
+                        }
+                    },
+
+                    title: {
+                        text: 'Riwayat kelembaban tanah dalam 24 jam terakhir'
+                    },
+
+                    subtitle: {
+                        text: 'Non-live mode'
+                    },
+
+                    accessibility: {
+                        screenReaderSection: {
+                            beforeChartFormat: '<{headingTagName}>{chartTitle}</{headingTagName}><div>{chartSubtitle}</div><div>{chartLongdesc}</div><div>{xAxisDescription}</div><div>{yAxisDescription}</div>'
+                        }
+                    },
+
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+
+                    xAxis: {
+                        type: 'datetime'
+                    },
+
+                    series: [{
+                        data: data_non_live,
+                        lineWidth: 0.5,
+                        name: 'Kelembaban tanah (%)'
+                    }]
+
+                });
+            } else {
+                return;
+            }
+        }
+    </script>
+
     {{-- script prediksi cuaca --}}
     <script>
         var lat = -2.988831;
@@ -438,11 +686,12 @@
                     items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
                         .getTime()
                     ])
-                    if (n > 3) break
+                    if (n > 4) break
                 };
                 let currentTime = new Date().getTime();
 
                 let lastIndexTime;
+
                 for (let i = 0; i < items.length; i++) {
                     lastIndexTime = items[i];
 
@@ -450,6 +699,7 @@
                         break;
                     }
                 }
+
                 let prediksi_kode_cuaca = lastIndexTime[0];
                 let prediksi_cuaca = lastIndexTime[1];
                 let prediksi_waktu_cuaca = lastIndexTime[2];
@@ -512,7 +762,7 @@
     <script>
         let percent_kelembaban_value = 0;
         let interval = 5000;
-        let n_boost = 5;
+        let n_boost = 10;
     </script>
 
     {{-- get realtime data and gauge chart --}}
@@ -558,22 +808,22 @@
                     }
 
                     // Kondisi untuk kondisi tanah
-                    if (lastdata.percent_value >= 80) {
-                        kondisi_tanah = "Sangat Basah";
-                    } else if (lastdata.percent_value >= 60) {
-                        kondisi_tanah = "Basah";
-                    } else if (lastdata.percent_value >= 40) {
-                        kondisi_tanah = "Lembab";
-                    } else if (lastdata.percent_value >= 20) {
-                        kondisi_tanah = "Kering";
-                    } else if (lastdata.percent_value >= 0) {
+                    if (lastdata.percent_value <= 8) {
                         kondisi_tanah = "Sangat Kering";
+                    } else if (lastdata.percent_value <= 17) {
+                        kondisi_tanah = "Kering";
+                    } else if (lastdata.percent_value <= 23) {
+                        kondisi_tanah = "Lembab";
+                    } else if (lastdata.percent_value <= 28) {
+                        kondisi_tanah = "Basah";
+                    } else if (lastdata.percent_value > 28) {
+                        kondisi_tanah = "Sangat Basah";
                     } else {
                         kondisi_tanah = "Kesalahan dalam mendeteksi";
                     }
 
                     // kondisi untuk aksi
-                    if (lastdata.percent_value > 50) {
+                    if (lastdata.percent_value > 23) {
                         aksi = "Tidak perlu disiram";
                     } else if (lastdata.percent_value >= 0) {
                         aksi = "Perlu disiram";
@@ -582,6 +832,9 @@
                     }
 
                     document.getElementById("card_kelembaban_tanah_value").innerText =
+                        `${lastdata.percent_value}%`;
+
+                    document.getElementById("progress_bar_card_kelembaban").style.width =
                         `${lastdata.percent_value}%`;
 
                     document.getElementById("card_kondisi_tanah").innerText = `${kondisi_tanah}`;
@@ -599,18 +852,18 @@
 
     {{-- script for boosting chart --}}
     <script>
-        function getData(n) {
+        function getData(n_val) {
             // get data berdasarka n jam yang lalu
             const lastRecordHour =
                 {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] * 1000) / (60 * 60) : -1 }}
 
             const lastRecordHour_1 = {{ $lastRecord['epoch'] }}
 
-            console.log(lastRecordHour_1);
-            console.log(lastRecordHour);
+            // console.log(lastRecordHour_1);
+            // console.log(lastRecordHour);
 
-            console.log(new Date(lastRecordHour_1).getHours());
-            console.log(new Date(lastRecordHour).getHours());
+            // console.log(new Date(lastRecordHour_1).getHours());
+            // console.log(new Date(lastRecordHour).getHours());
 
             const arr = [];
 
@@ -626,7 +879,7 @@
 
                 for (let index = 0; index < datas.length; index++) {
 
-                    if (datas[index].epoch >= (lastRecord.epoch - (n_boost * 60))) {
+                    if (datas[index].epoch >= (lastRecord.epoch - (n_val * 60))) {
                         let per_val = datas[index].percent_value;
                         let epoch_time = datas[index].epoch;
                         epoch_time = epoch_time * 1000;
@@ -648,7 +901,6 @@
 
         // console.time('line');
         const boostChartKelembabanTanah = Highcharts.chart('container-boost-chart', {
-
             chart: {
                 zoomType: 'x',
                 boost: {
@@ -727,9 +979,9 @@
             // the value axis
             yAxis: {
                 stops: [
-                    [0.4, '#DF5353'], // RED DF5353
-                    [0.6, '#DDDF0D'], // yellow DDDF0D
-                    [0.7, '#55BF3B'] // GREEN 55BF3B
+                    [0.15, '#DF5353'], // RED DF5353
+                    [0.20, '#DDDF0D'], // yellow DDDF0D
+                    [0.45, '#55BF3B'] // GREEN 55BF3B
                 ],
                 lineWidth: 0,
                 tickWidth: 0,
