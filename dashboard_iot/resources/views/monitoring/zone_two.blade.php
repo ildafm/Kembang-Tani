@@ -5,13 +5,13 @@
         .highcharts-figure .chart-container {
             width: 300px;
             height: 200px;
-            float: left;
+            float: unset;
         }
 
         .highcharts-figure,
         .highcharts-data-table table {
-            width: 600px;
-            margin: 0 auto;
+            width: 300px;
+            margin: auto;
         }
 
         .highcharts-data-table table {
