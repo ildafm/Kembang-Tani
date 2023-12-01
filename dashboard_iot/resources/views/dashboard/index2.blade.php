@@ -68,7 +68,7 @@
     <div class="container-fluid">
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <h1 class="h3 mb-0 text-gray-800"> <b>Dashboard</b> </h1>
 
             <button class="btn btn-sm btn-primary shadow-sm" id="btn_siram" onclick="clickButtonSiram()">
                 <i class="fas fa-tint fa-sm text-white-50"></i>
@@ -80,44 +80,96 @@
             </button>
         </div>
 
+        {{-- gauge kelembaban tanah --}}
+        <div class="card shadow mb-4">
+            <!-- Card Header -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+                <figure class="highcharts-figure">
+                    <div id="container-zone_1" class="chart-container"></div>
+                    <div id="container-zone_2" class="chart-container"></div>
+                </figure>
+            </div>
+        </div>
+
+        {{-- row prediksi cuaca --}}
         <div class="row">
-            {{-- gauge card --}}
-            <div class="col-lg-8">
-                {{-- gauge kelembaban tanah --}}
+
+            {{-- prediksi 1 --}}
+            <div class="col">
                 <div class="card shadow mb-4">
-                    <!-- Card Header -->
+                    <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca Selanjutnya</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
-                        <figure class="highcharts-figure">
-                            <div id="container-zone_1" class="chart-container"></div>
-                            <div id="container-zone_2" class="chart-container"></div>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-
-            {{-- card prediksi cuaca --}}
-            <div class="col-lg-4">
-                <div class="card shadow mb-4">
-                    <!-- Card Header -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca</h6>
-                    </div>
-                    <!-- Card Body -->
-                    <div class="card-body"> {{-- style="height: 240px" --}}
                         {{-- icon cuaca --}}
                         <center>
                             <div class="row">
                                 <div class="col">
-                                    <img id="prediksi_icon" src="" alt="Icon_cuaca.png"
+                                    <img id="prediksi_icon_1" src="" alt="Icon_cuaca.png"
                                         style="width: auto; height: auto" class="card-img-top">
                                 </div>
                                 <div class="col">
-                                    <p id="prediksi_cuaca">Cuaca</p>
-                                    <p id="prediksi_waktu">Waktu</p>
+                                    <p id="prediksi_cuaca_1">Cuaca</p>
+                                    <p id="prediksi_waktu_1">Waktu</p>
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+
+            {{-- prediksi 2 --}}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca 2</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        {{-- icon cuaca --}}
+                        <center>
+                            <div class="row">
+                                <div class="col">
+                                    <img id="prediksi_icon_2" src="" alt="Icon_cuaca.png"
+                                        style="width: auto; height: auto" class="card-img-top">
+                                </div>
+                                <div class="col">
+                                    <p id="prediksi_cuaca_2">Cuaca</p>
+                                    <p id="prediksi_waktu_2">Waktu</p>
+                                </div>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+
+            {{-- prediksi 3 --}}
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca 3</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        {{-- icon cuaca --}}
+                        <center>
+                            <div class="row">
+                                <div class="col">
+                                    <img id="prediksi_icon_3" src="" alt="Icon_cuaca.png"
+                                        style="width: auto; height: auto" class="card-img-top">
+                                </div>
+                                <div class="col">
+                                    <p id="prediksi_cuaca_3">Cuaca</p>
+                                    <p id="prediksi_waktu_3">Waktu</p>
                                 </div>
                             </div>
                         </center>
@@ -125,6 +177,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- Include jQuery -->
@@ -155,7 +208,8 @@
                 //urutkan berdasarkan jarak
                 data.sort(urutkanJarak);
 
-                $('#judulCuaca').html(data[0].kota);
+                $('#judulCuaca').html(data[0].propinsi +
+                    ', ' + data[0].kota + ', ' + data[0].kecamatan + ' ' + data[0].jarak.toFixed(2) + " km");
                 getCuaca(data[0].id);
             });
         }
@@ -163,36 +217,36 @@
         function getCuaca(idWilayah) {
             $.getJSON('https://ibnux.github.io/BMKG-importer/cuaca/' + idWilayah + '.json', function(data) {
                 var items = [];
-                var jml = 6;
+                var jml = data.length;
+
+                console.log(jml);
 
                 //setelah dapat jarak,  ambil 5 terdekat
-                for (n = 0; n < jml; n++) {
+                for (n = 4; n < jml; n++) {
                     items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
                         .getTime()
                     ])
-                    if (n > 4) break
+                    if (n > 8) break
                 };
-                let currentTime = new Date().getTime();
+                // let currentTime = new Date().getTime();
 
-                let lastIndexTime;
+                // prediksi 1
+                document.getElementById("prediksi_icon_1").src = "https://ibnux.github.io/BMKG-importer/icon/" +
+                    items[0][0] + ".png";
+                document.getElementById("prediksi_cuaca_1").innerText = items[0][1];
+                document.getElementById("prediksi_waktu_1").innerText = items[0][2];
 
-                for (let i = 0; i < items.length; i++) {
-                    lastIndexTime = items[i];
+                // prediksi 2
+                document.getElementById("prediksi_icon_2").src = "https://ibnux.github.io/BMKG-importer/icon/" +
+                    items[1][0] + ".png";
+                document.getElementById("prediksi_cuaca_2").innerText = items[1][1];
+                document.getElementById("prediksi_waktu_2").innerText = items[1][2];
 
-                    if (items[i][3] > currentTime) {
-                        break;
-                    }
-                }
-
-                let prediksi_kode_cuaca = lastIndexTime[0];
-                let prediksi_cuaca = lastIndexTime[1];
-                let prediksi_waktu_cuaca = lastIndexTime[2];
-                let prediksi_epoch_cuaca = lastIndexTime[3];
-
-                document.getElementById("prediksi_icon").src = "https://ibnux.github.io/BMKG-importer/icon/" +
-                    prediksi_kode_cuaca + ".png";
-                document.getElementById("prediksi_cuaca").innerText = prediksi_cuaca;
-                document.getElementById("prediksi_waktu").innerText = prediksi_waktu_cuaca;
+                // prediksi 3
+                document.getElementById("prediksi_icon_3").src = "https://ibnux.github.io/BMKG-importer/icon/" +
+                    items[2][0] + ".png";
+                document.getElementById("prediksi_cuaca_3").innerText = items[2][1];
+                document.getElementById("prediksi_waktu_3").innerText = items[2][2];
 
 
             });
@@ -253,8 +307,8 @@
                     let data_zone_1 = data_zone['lastRecordZone1'];
                     let data_zone_2 = data_zone['lastRecordZone2'];
 
-                    percent_kelembaban_zone_1_value = data_zone_1['sensor_value']['percent_value'];
-                    percent_kelembaban_zone_2_value = data_zone_2['sensor_value']['percent_value'];
+                    percent_kelembaban_zone_1_value = data_zone_1['percent_value'];
+                    percent_kelembaban_zone_2_value = data_zone_2['percent_value'];
 
                     // console.log(percent_kelembaban_zone_1_value);
                     // console.log(percent_kelembaban_zone_2_value);

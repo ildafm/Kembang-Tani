@@ -20,10 +20,6 @@ Route::get('/', function () {
     return redirect('dashboard');
 });
 
-Route::get('/x', function () {
-    return view('monitoring.cuaca_monitor');
-});
-
 Route::get('dashboard', [DashboardController::class, 'index']);
 Route::get('dashboard/getrealtime', [DashboardController::class, 'getRealtimeData'])->name('dashboard_getrealtime');
 
