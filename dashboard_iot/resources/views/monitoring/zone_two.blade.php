@@ -116,14 +116,15 @@
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800"><b>{{ $title }}</b></h1>
 
-            <button class="btn btn-sm btn-primary shadow-sm" id="btn_siram" onclick="clickButtonSiram()">
-                <i class="fas fa-faucet fa-sm text-white-50"></i>
-                Siram Tanaman
+            <button class="btn btn-sm shadow-sm" style="background-color: #5dc971" id="btn_siram" onclick="clickButtonSiram()">
+                <i class="fas fa-tint fa-sm text-white"></i>
+                <div class="text-white d-inline">Siram Tanaman</div>
             </button>
             <button class="btn btn-sm btn-danger shadow-sm" onclick="clickButtonStopSiram()" id="btn_stop_siram" hidden>
-                <i class="fas fa-stop fa-sm text-white-50"></i>
+                <i class="fas fa-stop fa-sm text-white"></i>
                 Stop Menyiram
             </button>
+
         </div>
 
         <!-- Content Card Row -->
@@ -256,8 +257,9 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
+                            <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
+                                style="border-radius: 25px 25px 0px 0px">
+                                <h6 class="m-0 font-weight-bold" style="color: #004225">Kelembaban Tanah</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -273,8 +275,9 @@
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca</h6>
+                            <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
+                                style="border-radius: 25px 25px 0px 0px">
+                                <h6 class="m-0 font-weight-bold" style="color: #004225">Prediksi Cuaca</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -302,8 +305,9 @@
             <div class="col-xl-8 col-lg-7">
                 <div class="card shadow mb-4">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
+                    <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
+                        style="border-radius: 25px 25px 0px 0px">
+                        <h6 class="m-0 font-weight-bold" style="color: #004225">History kelembaban tanah</h6>
                         <div class="dropdown no-arrow">
                             {{-- dropdown --}}
                             <div class="dropdown no-arrow">
@@ -388,8 +392,9 @@
         {{-- Tabel History --}}
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">History kelembaban tanah</h6>
+            <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
+                style="border-radius: 25px 25px 0px 0px">
+                <h6 class="m-0 font-weight-bold" style="color: #004225">History kelembaban tanah</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">

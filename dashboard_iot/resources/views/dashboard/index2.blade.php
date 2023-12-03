@@ -17,7 +17,7 @@
         .highcharts-data-table table {
             font-family: Verdana, sans-serif;
             border-collapse: collapse;
-            border: 1px solid #ebebeb;
+            border: 1px solid #gree;
             margin: 10px auto;
             text-align: center;
             width: 100%;
@@ -43,7 +43,7 @@
 
         .highcharts-data-table thead tr,
         .highcharts-data-table tr:nth-child(even) {
-            background: #f8f8f8;
+            background: green;
         }
 
         .highcharts-data-table tr:hover {
@@ -68,23 +68,24 @@
     <div class="container-fluid">
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800"> <b>Dashboard</b> </h1>
+            <h1 class="h3 mb-0 text-gray-800"> <b>Dashboard of KeTan</b> </h1>
 
-            <button class="btn btn-sm btn-primary shadow-sm" id="btn_siram" onclick="clickButtonSiram()">
-                <i class="fas fa-tint fa-sm text-white-50"></i>
-                Siram Tanaman
+            <button class="btn btn-sm shadow-sm" style="background-color: #5dc971" id="btn_siram" onclick="clickButtonSiram()">
+                <i class="fas fa-tint fa-sm text-white"></i>
+                <div class="text-white d-inline">Siram Tanaman</div>
             </button>
             <button class="btn btn-sm btn-danger shadow-sm" onclick="clickButtonStopSiram()" id="btn_stop_siram" hidden>
-                <i class="fas fa-stop fa-sm text-white-50"></i>
+                <i class="fas fa-stop fa-sm text-white"></i>
                 Stop Menyiram
             </button>
         </div>
 
         {{-- gauge kelembaban tanah --}}
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4 card-border-custom">
             <!-- Card Header -->
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Kelembaban Tanah</h6>
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                style="border-radius: 25px 25px 0px 0px">
+                <h6 class="m-0 font-weight-bold" style="color: #004225">Kelembaban Tanah</h6>
             </div>
 
             <!-- Card Body -->
@@ -101,10 +102,11 @@
 
             {{-- prediksi 1 --}}
             <div class="col">
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 card-border-custom">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca Selanjutnya</h6>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                        style="border-radius: 25px 25px 0px 0px">
+                        <h6 class="m-0 font-weight-bold" style="color: #004225">Prediksi Cuaca Selanjutnya</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
@@ -127,10 +129,11 @@
 
             {{-- prediksi 2 --}}
             <div class="col">
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 card-border-custom">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca 2</h6>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                        style="border-radius: 25px 25px 0px 0px">
+                        <h6 class="m-0 font-weight-bold" style="color: #004225">Prediksi Cuaca 2</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
@@ -153,10 +156,11 @@
 
             {{-- prediksi 3 --}}
             <div class="col">
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 card-border-custom">
                     <!-- Card Header - Dropdown -->
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Prediksi Cuaca 3</h6>
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between"
+                        style="border-radius: 25px 25px 0px 0px">
+                        <h6 class="m-0 font-weight-bold" style="color: #004225">Prediksi Cuaca 3</h6>
                     </div>
                     <!-- Card Body -->
                     <div class="card-body">
@@ -219,14 +223,22 @@
                 var items = [];
                 var jml = data.length;
 
-                console.log(jml);
+                // console.log(jml);
+                let c_epoch = new Date().getTime();
 
                 //setelah dapat jarak,  ambil 5 terdekat
-                for (n = 4; n < jml; n++) {
-                    items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
-                        .getTime()
-                    ])
-                    if (n > 8) break
+                for (n = 0; n < jml; n++) {
+                    let data_epoch = new Date(data[n].jamCuaca).getTime()
+                    console.log("c_e ", c_epoch);
+                    console.log("data_e ", data_epoch);
+
+                    if (c_epoch < data_epoch) {
+                        items.push([data[n].kodeCuaca, data[n].cuaca, data[n].jamCuaca, new Date(data[n].jamCuaca)
+                            .getTime()
+                        ])
+                    } else if (items.length > 3) {
+                        break;
+                    }
                 };
                 // let currentTime = new Date().getTime();
 
@@ -234,19 +246,22 @@
                 document.getElementById("prediksi_icon_1").src = "https://ibnux.github.io/BMKG-importer/icon/" +
                     items[0][0] + ".png";
                 document.getElementById("prediksi_cuaca_1").innerText = items[0][1];
-                document.getElementById("prediksi_waktu_1").innerText = items[0][2];
+                document
+                    .getElementById("prediksi_waktu_1").innerText = items[0][2];
 
                 // prediksi 2
                 document.getElementById("prediksi_icon_2").src = "https://ibnux.github.io/BMKG-importer/icon/" +
                     items[1][0] + ".png";
                 document.getElementById("prediksi_cuaca_2").innerText = items[1][1];
-                document.getElementById("prediksi_waktu_2").innerText = items[1][2];
+                document
+                    .getElementById("prediksi_waktu_2").innerText = items[1][2];
 
                 // prediksi 3
                 document.getElementById("prediksi_icon_3").src = "https://ibnux.github.io/BMKG-importer/icon/" +
                     items[2][0] + ".png";
                 document.getElementById("prediksi_cuaca_3").innerText = items[2][1];
-                document.getElementById("prediksi_waktu_3").innerText = items[2][2];
+                document
+                    .getElementById("prediksi_waktu_3").innerText = items[2][2];
 
 
             });
@@ -411,6 +426,7 @@
 
             series: [{
                 name: 'Kelembaban Tanah Zone 1',
+                color: "red",
                 data: [{{ $percent_value_zone_1 }}],
                 dataLabels: {
                     format: '<div style="text-align:center">' +
@@ -421,8 +437,7 @@
                 tooltip: {
                     valueSuffix: ' %'
                 }
-            }]
-
+            }],
         }));
 
         // The Kelembaban Tanah Zone 2 gauge

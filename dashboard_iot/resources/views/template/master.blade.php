@@ -29,13 +29,21 @@
         }
 
         .colorcontent {
-            background-color: #D8D8D8
+            background-color: #e8ebf0
         }
 
         .instagram-bg-ic {
             vertical-align: middle;
             background: #d6249f;
             background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+        }
+
+        .card {
+            border-radius: 25px
+        }
+
+        .card-header-border-custom {
+            border-radius: 25px 25px 0px 0px
         }
     </style>
 
@@ -54,7 +62,7 @@
 </head>
 
 <body id="page-top">
-
+    {{-- color for gauge caption 1c444c --}}
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -155,7 +163,7 @@
                             <!-- Dropdown - profiles -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="">
-                                <h6 class="dropdown-header">
+                                <h6 class="dropdown-header" style="background-color: #004225; border: 0px">
                                     Profiles Center
                                 </h6>
 
