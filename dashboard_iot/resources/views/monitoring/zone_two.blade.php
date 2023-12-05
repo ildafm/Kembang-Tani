@@ -394,7 +394,7 @@
             <!-- Card Header - Dropdown -->
             <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
                 style="border-radius: 25px 25px 0px 0px">
-                <h6 class="m-0 font-weight-bold" style="color: #004225">History kelembaban tanah</h6>
+                <h6 class="m-0 font-weight-bold" style="color: #004225">Tabel history kelembaban tanah</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -857,10 +857,10 @@
 
     {{-- script for boosting chart --}}
     <script>
-        function getData(n) {
+        function getData(n_val) {
             // get data berdasarka n jam yang lalu
             const lastRecordHour =
-                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] / 1000) * (60 * 60) : -1 }}
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] * 1000) * (60 * 60) : -1 }}
             const arr = [];
 
             // konversi array menjadi json
@@ -875,7 +875,7 @@
 
                 for (let index = 0; index < datas.length; index++) {
 
-                    if (datas[index].epoch >= (lastRecord.epoch - (n_boost * 60))) {
+                    if (datas[index].epoch >= (lastRecord.epoch - (n_val * 60))) {
                         let per_val = datas[index].percent_value;
                         let epoch_time = datas[index].epoch;
                         epoch_time = epoch_time * 1000;
@@ -887,8 +887,6 @@
                     }
                 }
             }
-            // Menampilkan hasil
-            // console.log(arr);
 
             return arr;
         }

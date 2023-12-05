@@ -258,7 +258,7 @@
                             <!-- Card Header -->
                             <div class="card-header card-header-border-custom py-3 d-flex flex-row align-items-center justify-content-between"
                                 style="border-radius: 25px 25px 0px 0px">
-                                <h6 class="m-0 font-weight-bold" style="color: #004225">Kelembaban Tanah Zona 1</h6>
+                                <h6 class="m-0 font-weight-bold" style="color: #004225">Kelembaban Tanah</h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -859,16 +859,7 @@
         function getData(n_val) {
             // get data berdasarka n jam yang lalu
             const lastRecordHour =
-                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] * 1000) / (60 * 60) : -1 }}
-
-            const lastRecordHour_1 = {{ $lastRecord['epoch'] }}
-
-            // console.log(lastRecordHour_1);
-            // console.log(lastRecordHour);
-
-            // console.log(new Date(lastRecordHour_1).getHours());
-            // console.log(new Date(lastRecordHour).getHours());
-
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] * 1000) * (60 * 60) : -1 }}
             const arr = [];
 
             // konversi array menjadi json
@@ -895,8 +886,6 @@
                     }
                 }
             }
-            // Menampilkan hasil
-            // console.log(arr);
 
             return arr;
         }
