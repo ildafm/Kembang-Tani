@@ -85,7 +85,7 @@
             </a>
 
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
+            <hr class="sidebar-divider mt-3 my-0">
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item {{ $active == 'dashboard' ? 'active' : '' }}">
@@ -139,7 +139,7 @@
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
+                        <i class="fa fa-bars" style="color: #5dc971"></i>
                     </button>
 
                     <!-- Topbar time -->
