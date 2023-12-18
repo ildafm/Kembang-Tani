@@ -11,6 +11,8 @@
     {{-- <meta http-equiv="refresh" content="20;url=dashboard" /> --}}
 
     <title>KeTan - {{ $title }}</title>
+    {{-- logo dari halaman --}}
+    <link rel="icon" href="../template/img/ketan_ic.png" type="image/icon type">
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"

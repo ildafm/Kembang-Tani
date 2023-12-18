@@ -180,16 +180,12 @@
                                 @if ($lastRecord != '0' && count($lastRecord) > 0)
                                     <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_kondisi_tanah">
                                         @php
-                                            if ($lastRecord['percent_value'] <= 8) {
-                                                echo 'Sangat Kering';
-                                            } elseif ($lastRecord['percent_value'] <= 17) {
+                                            if ($lastRecord['percent_value'] <= 40) {
                                                 echo 'Kering';
-                                            } elseif ($lastRecord['percent_value'] <= 23) {
+                                            } elseif ($lastRecord['percent_value'] <= 67) {
                                                 echo 'Lembab';
-                                            } elseif ($lastRecord['percent_value'] <= 28) {
+                                            } elseif ($lastRecord['percent_value'] > 67) {
                                                 echo 'Basah';
-                                            } elseif ($lastRecord['percent_value'] > 28) {
-                                                echo 'Sangat Basah';
                                             } else {
                                                 echo 'Kesalahan dalam mendeteksi';
                                             }
@@ -221,7 +217,7 @@
                                     @if ($lastRecord != '0' && count($lastRecord) > 0)
                                         <div class="h5 mb-0 font-weight-bold text-gray-800" id="card_aksi">
                                             @php
-                                                if ($lastRecord['percent_value'] > 23) {
+                                                if ($lastRecord['percent_value'] > 40) {
                                                     echo 'Tidak perlu disiram';
                                                 } elseif ($lastRecord['percent_value'] >= 0) {
                                                     echo 'Perlu disiram';
@@ -813,22 +809,19 @@
                     }
 
                     // Kondisi untuk kondisi tanah
-                    if (lastdata.percent_value <= 8) {
-                        kondisi_tanah = "Sangat Kering";
-                    } else if (lastdata.percent_value <= 17) {
-                        kondisi_tanah = "Kering";
-                    } else if (lastdata.percent_value <= 23) {
-                        kondisi_tanah = "Lembab";
-                    } else if (lastdata.percent_value <= 28) {
-                        kondisi_tanah = "Basah";
-                    } else if (lastdata.percent_value > 28) {
-                        kondisi_tanah = "Sangat Basah";
+
+                    if ($lastRecord['percent_value'] <= 40) {
+                        kondisi_tanah = 'Kering';
+                    } else if ($lastRecord['percent_value'] <= 67) {
+                        kondisi_tanah = 'Lembab';
+                    } else if ($lastRecord['percent_value'] > 67) {
+                        kondisi_tanah = 'Basah';
                     } else {
-                        kondisi_tanah = "Kesalahan dalam mendeteksi";
+                        kondisi_tanah = 'Kesalahan dalam mendeteksi';
                     }
 
                     // kondisi untuk aksi
-                    if (lastdata.percent_value > 23) {
+                    if (lastdata.percent_value > 40) {
                         aksi = "Tidak perlu disiram";
                     } else if (lastdata.percent_value >= 0) {
                         aksi = "Perlu disiram";
@@ -860,7 +853,7 @@
         function getData(n_val) {
             // get data berdasarka n jam yang lalu
             const lastRecordHour =
-                {{ $lastRecord != '0' && count($lastRecord) > 0 ? ($lastRecord['epoch'] * 1000) * (60 * 60) : -1 }}
+                {{ $lastRecord != '0' && count($lastRecord) > 0 ? $lastRecord['epoch'] * 1000 * (60 * 60) : -1 }}
             const arr = [];
 
             // konversi array menjadi json
