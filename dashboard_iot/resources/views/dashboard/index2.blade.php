@@ -118,8 +118,8 @@
                                         style="width: auto; height: auto" class="card-img-top">
                                 </div>
                                 <div class="col">
-                                    <p id="prediksi_cuaca_1">Cuaca</p>
-                                    <p id="prediksi_waktu_1">Waktu</p>
+                                    <p id="prediksi_cuaca_1" class="text-dark">Cuaca</p>
+                                    <p id="prediksi_waktu_1" class="text-dark">Waktu</p>
                                 </div>
                             </div>
                         </center>
@@ -145,8 +145,8 @@
                                         style="width: auto; height: auto" class="card-img-top">
                                 </div>
                                 <div class="col">
-                                    <p id="prediksi_cuaca_2">Cuaca</p>
-                                    <p id="prediksi_waktu_2">Waktu</p>
+                                    <p id="prediksi_cuaca_2" class="text-dark">Cuaca</p>
+                                    <p id="prediksi_waktu_2" class="text-dark">Waktu</p>
                                 </div>
                             </div>
                         </center>
@@ -172,8 +172,8 @@
                                         style="width: auto; height: auto" class="card-img-top">
                                 </div>
                                 <div class="col">
-                                    <p id="prediksi_cuaca_3">Cuaca</p>
-                                    <p id="prediksi_waktu_3">Waktu</p>
+                                    <p id="prediksi_cuaca_3" class="text-dark">Cuaca</p>
+                                    <p id="prediksi_waktu_3" class="text-dark">Waktu</p>
                                 </div>
                             </div>
                         </center>

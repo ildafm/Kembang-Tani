@@ -285,8 +285,8 @@
                                                 style="width: auto; height: auto" class="card-img-top">
                                         </div>
                                         <div class="col">
-                                            <p id="prediksi_cuaca">Cuaca</p>
-                                            <p id="prediksi_waktu">Waktu</p>
+                                            <p class="text-dark" id="prediksi_cuaca">Cuaca</p>
+                                            <p class="text-dark" id="prediksi_waktu">Waktu</p>
                                         </div>
                                     </div>
                                 </center>
@@ -396,7 +396,7 @@
             <div class="card-body">
                 @if ($datas != '0' && count($datas) > 0)
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable">
+                        <table class="table table-bordered text-dark" id="dataTable">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -810,11 +810,11 @@
 
                     // Kondisi untuk kondisi tanah
 
-                    if ($lastRecord['percent_value'] <= 40) {
+                    if (lastdata.percent_value <= 40) {
                         kondisi_tanah = 'Kering';
-                    } else if ($lastRecord['percent_value'] <= 67) {
+                    } else if (lastdata.percent_value <= 67) {
                         kondisi_tanah = 'Lembab';
-                    } else if ($lastRecord['percent_value'] > 67) {
+                    } else if (lastdata.percent_value > 67) {
                         kondisi_tanah = 'Basah';
                     } else {
                         kondisi_tanah = 'Kesalahan dalam mendeteksi';
