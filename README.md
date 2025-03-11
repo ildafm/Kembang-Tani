@@ -1,4 +1,4 @@
-# KeTan (Kembang Tani) -> Dashboard IoT
+# Kembang Tani (KeTan) -> Dashboard IoT
 Project Tugas Akhir Mata Kuliah IoT IF7B Universitas Multi Data Palembang
 
 
